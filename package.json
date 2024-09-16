@@ -1,0 +1,16 @@
+{
+  "name": "youtubeclone",
+  "version": "1.0.0",
+  "description": "a project to learn backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chai",
+    "javascript",
+    "backend"
+  ],
+  "author": "Ammar Ansari",
+  "license": "ISC"
+}
