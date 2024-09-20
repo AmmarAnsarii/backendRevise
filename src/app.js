@@ -17,6 +17,6 @@ app.use(cookieParser())
 
 
 
-app.use("/api/v1/users", userRouter)
+app.use("api/v1/users", userRouter)
 
 export { app }

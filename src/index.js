@@ -10,18 +10,13 @@ dotenv.config({
 
 connectDB()
 .then(()=>{
-    const server = app.listen(process.env.PORT || 8000, ()=>{
+    app.listen(process.env.PORT || 8000, ()=>{
         console.log(`App is running on port: ${process.env.PORT}`);
-    })
-    server.on("Error", (error)=>{
-        console.log("Error inside server.on", error);
-        throw error;
     })
 })
 .catch((err)=>{
     console.log("MONGODB connection has failed, this was written in the promise",err);
 })
-
 
 
 
