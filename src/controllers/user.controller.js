@@ -148,8 +148,12 @@ const logoutUser = asyncHandler(async (req, res)=> {
     .json(new ApiResponse(200, {}, "User logged out"))
 })
 
-try {
-    const refreshAccessToken = asyncHandler(async (req, res)=>{
+const refreshAccessToken = asyncHandler(async (req, res)=>{
+        try {
+            
+        } catch (error) {
+            
+        }
         const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
     
         if(!incomingRefreshToken){
@@ -189,16 +193,61 @@ try {
                 "Access Token refreshed successfully"
             )
         )
-    })
-} catch (error) {
-    throw new ApiError(401, error?.message || "Invalid refresh token")
-}
+})
 
+const changeCurrentPassword = asyncHandler( async (req, res) =>{
+    const {oldPassword, newPassword} = req.body
 
+    const user = await User.findById(req.user?._id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+    if(!isPasswordCorrect){
+        throw new ApiError(400, "Invalid old password")
+    }
+
+    user.password = newPassword
+    await user.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"))
+})
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+    .status(200)
+    .json(200, req.user, "current user fetched successfully")
+})
+
+const updateAccountDetails = asyncHandler(async (req, res)=>{
+    const {fullName, email} = req.body
+
+    if(!fullName || !email){
+        throw new ApiError(400, "All fields are required")
+    }
+
+    const user = User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                fullName, 
+                email,
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Account details updated successfully"))
+})
 
 export { 
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails
 };
